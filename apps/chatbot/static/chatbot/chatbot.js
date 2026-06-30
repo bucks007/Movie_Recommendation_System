@@ -117,23 +117,37 @@ document.addEventListener("DOMContentLoaded", () => {
     // Dummy AI Response
     // ------------------------
 
-    function fakeBotReply(userText) {
+    async function sendToBackend(message){
 
-        showTyping();
+    showTyping();
 
-        setTimeout(() => {
+    const response = await fetch("/chatbot/send/",{
 
-            removeTyping();
+        method:"POST",
 
-            addBotMessage(
-                "🤖 You asked:<br><br><b>" +
-                userText +
-                "</b><br><br>This is a dummy response. Gemini will answer here soon."
-            );
+        headers:{
 
-        }, 1200);
+            "Content-Type":"application/json",
 
-    }
+            "X-CSRFToken":getCookie("csrftoken")
+
+        },
+
+        body:JSON.stringify({
+
+            message:message
+
+        })
+
+    });
+
+    const data=await response.json();
+
+    removeTyping();
+
+    addBotMessage(data.response);
+
+}
 
     // ------------------------
     // Send
@@ -153,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input.value = "";
 
-        fakeBotReply(text);
+        sendToBackend(text);
 
     }
 
@@ -206,3 +220,31 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
 });
+
+function getCookie(name){
+
+    let cookieValue=null;
+
+    if(document.cookie && document.cookie!==""){
+
+        const cookies=document.cookie.split(";");
+
+        for(let cookie of cookies){
+
+            cookie=cookie.trim();
+
+            if(cookie.startsWith(name+"=")){
+
+                cookieValue=decodeURIComponent(cookie.substring(name.length+1));
+
+                break;
+
+            }
+
+        }
+
+    }
+
+    return cookieValue;
+
+}
