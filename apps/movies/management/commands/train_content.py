@@ -61,10 +61,14 @@ class Command(BaseCommand):
             tfidf_matrix
         )
 
+        # movie_id -> dataframe index
         indices = pd.Series(
             df.index,
-            index=df["title"]
-        ).drop_duplicates()
+            index=df["movie_id"]
+        )
+
+        # dataframe index -> movie_id
+        movie_ids = df["movie_id"].tolist()
 
         os.makedirs(
             "ml_models",
@@ -86,8 +90,13 @@ class Command(BaseCommand):
             "ml_models/movie_indices.joblib"
         )
 
+        joblib.dump(
+            movie_ids,
+            "ml_models/movie_ids.joblib"
+        )
+
         self.stdout.write(
             self.style.SUCCESS(
-                "Model trained successfully!"
+                "Content-based model trained successfully!"
             )
         )

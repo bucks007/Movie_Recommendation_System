@@ -68,8 +68,8 @@ def train_content_model():
 
     indices = pd.Series(
         df.index,
-        index=df["title"]
-    ).drop_duplicates()
+        index=df["movie_id"]
+    )
 
     os.makedirs(
         "ml_models",
@@ -91,6 +91,11 @@ def train_content_model():
     joblib.dump(
         indices,
         "ml_models/movie_indices.joblib"
+    )
+
+    joblib.dump(
+        movie_ids,
+        "ml_models/movie_ids.joblib"
     )
 
     print("Content-Based Recommendation Model Trained Successfully!")

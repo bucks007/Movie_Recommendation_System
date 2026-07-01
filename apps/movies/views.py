@@ -54,7 +54,7 @@ def movie_detail(request, id):
     )
 
     recommendations = recommend_hybrid(
-        movie.title,
+        movie.movie_id,
         top_n=10
     )
 

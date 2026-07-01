@@ -3,17 +3,17 @@ from apps.recommender.services.collaborative import recommend_collaborative
 
 
 def recommend_hybrid(
-    movie_title,
+    movie_id,
     top_n=10
 ):
 
     content_recs = recommend_movies(
-        movie_title,
+        movie_id,
         top_n=5
     )
 
     collab_recs = recommend_collaborative(
-        movie_title,
+        movie_id,
         top_n=5
     )
 

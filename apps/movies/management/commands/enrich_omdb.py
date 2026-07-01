@@ -7,6 +7,7 @@ import time
 
 class Command(BaseCommand):
     help = "Enrich movies using OMDb API"
+    
     def handle(self, *args, **kwargs):
         movies = Movie.objects.filter(
             poster_url=""

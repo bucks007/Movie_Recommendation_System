@@ -1,7 +1,11 @@
 from .intent_service import detect_intent
+from .tool_service import execute_tool
 
-def process_message(user, message):
-
+def process_message(user,message):
     intent = detect_intent(message)
-
-    return f"Intent detected: {intent.value}"
+    result = execute_tool(
+        intent,
+        user,
+        message
+    )
+    return result

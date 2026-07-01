@@ -6,6 +6,8 @@ class Intent(Enum):
     RECOMMEND = "recommend"
     SIMILAR = "similar"
     PERSONALIZED = "personalized"
+    GENRE = "genre"
+    TRENDING = "trending"
     MOVIE_INFO = "movie_info"
     SEARCH = "search"
     GREETING = "greeting"
@@ -50,7 +52,7 @@ def detect_intent(message):
     # Recommendation
 
     if re.search(
-        r"\b(recommend|suggest|best|top)\b",
+        r"\b(recommend|recommendation|suggest|best|top|must watch|good movies)\b",
         message
     ):
         return Intent.RECOMMEND
@@ -58,10 +60,26 @@ def detect_intent(message):
     # Movie information
 
     if re.search(
-        r"\b(plot|director|actor|cast|story|who directed|who is)\b",
+        r"\b(plot|story|director|directed|actor|actors|cast|runtime|release|released|rating|imdb)\b",
         message
     ):
         return Intent.MOVIE_INFO
+
+    # GENRE
+
+    if re.search(
+        r"\b(action|comedy|romance|drama|thriller|crime|horror|animation|family|adventure|fantasy|sci-fi|science fiction)\b",
+        message
+    ):
+        return Intent.GENRE
+    
+    # TRENDING
+
+    if re.search(
+        r"\b(trending|popular|top rated|highest rated|latest)\b",
+        message
+    ):
+        return Intent.TRENDING
 
     # Search
 

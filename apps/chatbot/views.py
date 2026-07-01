@@ -24,16 +24,12 @@ def chat_message(request):
         ""
     )
 
-    response = process_message(
+    result = process_message(
         request.user,
         message
     )
 
-    return JsonResponse({
-
-        "response": response
-
-    })
+    return JsonResponse(result)
 
 def new_chat(request):
 

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
     const toggleBtn = document.getElementById("chat-toggle");
     const chatWindow = document.getElementById("chat-window");
     const closeBtn = document.getElementById("close-chat");
@@ -14,21 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------
 
     toggleBtn.onclick = () => {
-
         chatWindow.style.display = "flex";
-
         toggleBtn.style.display = "none";
-
         input.focus();
-
     };
-
     closeBtn.onclick = () => {
-
         chatWindow.style.display = "none";
-
         toggleBtn.style.display = "block";
-
     };
 
     // ------------------------
@@ -36,12 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------
 
     function scrollBottom() {
-
         messages.scrollTop = messages.scrollHeight;
-
         document.getElementById("chat-body").scrollTop =
             document.getElementById("chat-body").scrollHeight;
-
     }
 
     // ------------------------
@@ -49,17 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------
 
     function addUserMessage(text) {
-
         const div = document.createElement("div");
-
         div.className = "user-message";
-
         div.innerHTML = text;
-
         messages.appendChild(div);
-
         scrollBottom();
-
     }
 
     // ------------------------
@@ -67,17 +49,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------
 
     function addBotMessage(text) {
-
         const div = document.createElement("div");
-
         div.className = "bot-message";
-
         div.innerHTML = text;
-
         messages.appendChild(div);
-
         scrollBottom();
-
     }
 
     // ------------------------
@@ -85,32 +61,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------
 
     function showTyping() {
-
         const div = document.createElement("div");
-
         div.className = "bot-message";
-
         div.id = "typing";
-
         div.innerHTML = `
             <span class="typing-dot"></span>
             <span class="typing-dot"></span>
             <span class="typing-dot"></span>
         `;
-
         messages.appendChild(div);
-
         scrollBottom();
-
     }
 
     function removeTyping() {
-
         const typing = document.getElementById("typing");
-
         if (typing)
             typing.remove();
-
     }
 
     // ------------------------
@@ -118,35 +84,67 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------
 
     async function sendToBackend(message){
-
     showTyping();
-
     const response = await fetch("/chatbot/send/",{
-
         method:"POST",
-
         headers:{
-
             "Content-Type":"application/json",
-
             "X-CSRFToken":getCookie("csrftoken")
-
         },
-
         body:JSON.stringify({
-
             message:message
-
         })
-
     });
 
-    const data=await response.json();
+    const data = await response.json();
 
     removeTyping();
 
-    addBotMessage(data.response);
+    addBotMessage(data.message);
 
+    if (data.type === "movies") {
+        if (data.type === "movie_info") {
+            addMovieCard(data.movie);
+        }
+        data.movies.forEach(movie => {
+            addMovieCard(movie);
+        });
+    }
+}
+
+function addMovieCard(movie) {
+    const div = document.createElement("div");
+    div.className = "movie-card";
+    div.innerHTML = `
+        <div class="card mt-2">
+            <div class="row g-0">
+                <div class="col-4">
+                    <img
+                        src="${movie.poster}"
+                        class="img-fluid rounded-start"
+                        onerror="this.src='https://placehold.co/300x450?text=No+Poster'"
+                    >
+                </div>
+                <div class="col-8">
+                    <div class="card-body">
+                        <h6>${movie.title}</h6>
+                        <small>⭐ ${movie.rating}</small>
+                        <br>
+                        <small>${movie.year}</small>
+                        <br><br>
+                        <a
+                            href="/movies/${movie.id}/"
+                            class="btn btn-sm btn-primary"
+                        >
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    messages.appendChild(div);
+    scrollBottom();
 }
 
     // ------------------------
@@ -154,23 +152,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------
 
     function sendMessage() {
-
         const text = input.value.trim();
 
         if (!text)
             return;
-
         if (welcome)
             welcome.style.display = "none";
 
         addUserMessage(text);
-
         input.value = "";
-
         sendToBackend(text);
-
     }
-
     sendBtn.onclick = sendMessage;
 
     // ------------------------
@@ -178,31 +170,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------
 
     input.addEventListener("keydown", function(e){
-
         if(e.key==="Enter" && !e.shiftKey){
-
             e.preventDefault();
-
             sendMessage();
-
         }
-
     });
-
     // ------------------------
     // Suggestion Chips
     // ------------------------
-
     document.querySelectorAll(".chip").forEach(chip=>{
-
         chip.onclick=()=>{
-
             input.value=chip.innerText;
-
             sendMessage();
-
         };
-
     });
 
     // ------------------------
@@ -210,41 +190,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // ------------------------
 
     newChatBtn.onclick=()=>{
-
         messages.innerHTML="";
-
         welcome.style.display="block";
-
         input.value="";
-
     };
-
 });
 
 function getCookie(name){
-
     let cookieValue=null;
 
     if(document.cookie && document.cookie!==""){
-
         const cookies=document.cookie.split(";");
-
+        
         for(let cookie of cookies){
-
             cookie=cookie.trim();
-
             if(cookie.startsWith(name+"=")){
-
                 cookieValue=decodeURIComponent(cookie.substring(name.length+1));
-
                 break;
-
             }
-
         }
-
     }
-
     return cookieValue;
-
 }
