@@ -8,6 +8,12 @@ class Intent(Enum):
     PERSONALIZED = "personalized"
     GENRE = "genre"
     TRENDING = "trending"
+    TOP_RATED = "top_rated"
+    LATEST = "latest"
+    ACTOR = "actor"
+    DIRECTOR_MOVIES = "director_movies"
+    YEAR = "year"
+
     MOVIE_INFO = "movie_info"
     SEARCH = "search"
     GREETING = "greeting"
@@ -41,6 +47,62 @@ def detect_intent(message):
     ):
         return Intent.PERSONALIZED
 
+    # TRENDING
+
+    if re.search(
+        r"\b(trending|popular|viral)\b",
+        message
+    ):
+        return Intent.TRENDING
+    
+    # Top Rated
+
+    if re.search(
+        r"\b(top rated|highest rated|best imdb|top imdb)\b",
+        message
+    ):
+        return Intent.TOP_RATED
+    
+    # Latest
+
+    if re.search(
+        r"\b(latest|new|recent)\b",
+        message
+    ):
+        return Intent.LATEST
+    
+    # Actor
+
+    if re.search(
+        r"\b(starring|actor|actors|with)\b",
+        message
+    ):
+        return Intent.ACTOR
+    
+    # Director Movies
+
+    if re.search(
+        r"\b(directed by|movies by)\b",
+        message
+    ):
+        return Intent.DIRECTOR_MOVIES
+    
+    # Year
+
+    if re.search(
+        r"\b(19\d{2}|20\d{2})\b",
+        message
+    ):
+        return Intent.YEAR
+    
+    # GENRE
+
+    if re.search(
+        r"\b(action|comedy|romance|drama|thriller|crime|horror|animation|family|adventure|fantasy|sci-fi|science fiction)\b",
+        message
+    ):
+        return Intent.GENRE
+
     # Similar movie
 
     if re.search(
@@ -52,7 +114,7 @@ def detect_intent(message):
     # Recommendation
 
     if re.search(
-        r"\b(recommend|recommendation|suggest|best|top|must watch|good movies)\b",
+        r"\b(recommend|recommendation|suggest|best|top|must watch|good movies|worth watching)\b",
         message
     ):
         return Intent.RECOMMEND
@@ -64,23 +126,7 @@ def detect_intent(message):
         message
     ):
         return Intent.MOVIE_INFO
-
-    # GENRE
-
-    if re.search(
-        r"\b(action|comedy|romance|drama|thriller|crime|horror|animation|family|adventure|fantasy|sci-fi|science fiction)\b",
-        message
-    ):
-        return Intent.GENRE
     
-    # TRENDING
-
-    if re.search(
-        r"\b(trending|popular|top rated|highest rated|latest)\b",
-        message
-    ):
-        return Intent.TRENDING
-
     # Search
 
     if re.search(
